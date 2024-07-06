@@ -2,7 +2,7 @@ import { AccountingRequest } from './domain/accounting.types';
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_API;
 
-export const fetchAccounting = (
+export const fetchAccounting = async (
   payload: AccountingRequest
 ): Promise<{ npv: number }> => {
   const url = `${baseUrl}?cost=${payload.cost}&rate=${payload.rate}&payoff=${payload.payoff}`;
