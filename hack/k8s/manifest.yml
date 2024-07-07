@@ -50,4 +50,32 @@ spec:
           image: hannguyendev/keeper-fe:latest
           ports:
             - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keeper-backend-service
+  namespace: keeper
+spec:
+  selector:
+    app: keeper-backend
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keeper-frontend-service
+  namespace: keeper
+spec:
+  selector:
+    app: keeper-frontend
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      nodePort: 30001
 
