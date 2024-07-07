@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: keeper
+  labels:
+    name: keeper
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keeper-backend-deploy
+  namespace: keeper
+  labels:
+    app: keeper-backend
+spec:
+  selector:
+    matchLabels:
+      app: keeper-backend
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: keeper-backend
+    spec:
+      containers:
+        - name: keeper-backend
+          image: hannguyendev/keeper-be:latest
+          ports:
+            - containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keeper-frontend-deploy
+  namespace: keeper
+  labels:
+    app: keeper-frontend
+spec:
+  selector:
+    matchLabels:
+      app: keeper-frontend
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: keeper-frontend
+    spec:
+      containers:
+        - name: keeper-frontend
+          image: hannguyendev/keeper-fe:latest
+          ports:
+            - containerPort: 3000
+
