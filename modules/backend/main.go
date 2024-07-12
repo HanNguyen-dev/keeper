@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
-	r := router.SetupRouter()
-	r.Run(":8080")
+	r := router.SetupRouter().AccountRoute().PokemonRoute()
+	r.R.Run(":8080")
 }

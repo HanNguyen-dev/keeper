@@ -10,7 +10,11 @@ var (
 	db = make(map[string]string)
 )
 
-func SetupRouter() *gin.Engine {
+type router struct {
+	R *gin.Engine
+}
+
+func SetupRouter() *router {
 	// Disable Console Color
 	// gin.DisableConsoleColor()
 	r := gin.Default()
@@ -30,10 +34,6 @@ func SetupRouter() *gin.Engine {
 			c.JSON(http.StatusOK, gin.H{"user": user, "status": "no value"})
 		}
 	})
-
-	r.GET("/accounting", handleAccountApi)
-
-	r.GET("/pokemon/:id", handlePokemonApi)
 
 	// Authorized group (uses gin.BasicAuth() middleware)
 	// Same than:
@@ -69,6 +69,8 @@ func SetupRouter() *gin.Engine {
 			c.JSON(http.StatusOK, gin.H{"status": "ok"})
 		}
 	})
-
-	return r
+	return &router{
+		R: r,
+  }
 }
+

@@ -11,6 +11,11 @@ var (
 	nameService = service.NewPokemonService()
 )
 
+func (router *router) PokemonRoute() *router {
+	router.R.GET("/pokemon/:id", handlePokemonApi)
+	return router
+}
+
 func handlePokemonApi(c *gin.Context) {
 	id := c.Params.ByName("id")
 

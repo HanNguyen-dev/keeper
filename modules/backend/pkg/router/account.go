@@ -13,6 +13,11 @@ var (
 	accountingService = service.NewAccountingService()
 )
 
+func (router *router) AccountRoute() *router {
+	router.R.GET("/accounting", handleAccountApi)
+	return router
+}
+
 func handleAccountApi(c *gin.Context) {
 	var accountParams domain.Accounting
 
@@ -33,5 +38,4 @@ func handleAccountApi(c *gin.Context) {
 		return
 	}
 	c.String(http.StatusBadRequest, "Error processing your request")
-
 }
