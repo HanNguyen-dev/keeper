@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	nameService = service.NewPokemonService()
+	pokemonService = service.NewPokemonService()
 )
 
 func (router *router) PokemonRoute() *router {
@@ -19,7 +19,7 @@ func (router *router) PokemonRoute() *router {
 func handlePokemonApi(c *gin.Context) {
 	id := c.Params.ByName("id")
 
-	resp, err := nameService.GetPokemon(id)
+	resp, err := pokemonService.GetPokemon(id)
 
 	if err != nil {
 		c.String(http.StatusBadRequest, "Error processing your request")
