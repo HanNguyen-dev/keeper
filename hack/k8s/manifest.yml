@@ -1,10 +1,3 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: keeper
-  labels:
-    name: keeper
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,6 +20,30 @@ spec:
           image: hannguyendev/keeper-be:latest
           ports:
             - containerPort: 8080
+          env:
+            - name: POKEMON_URL
+              value: https://pokeapi.co/api/v2/pokemon
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keeper-backend-service
+  namespace: keeper
+spec:
+  selector:
+    app: keeper-backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keeper-configmap
+  namespace: keeper
+data:
+  backend_url: http://keeper-backend-service/pokemon
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -50,19 +67,12 @@ spec:
           image: hannguyendev/keeper-fe:latest
           ports:
             - containerPort: 3000
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: keeper-backend-service
-  namespace: keeper
-spec:
-  selector:
-    app: keeper-backend
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
+          env:
+            - name: BASE_API
+              valueFrom:
+                configMapKeyRef:
+                  name: keeper-configmap
+                  key: backend_url
 ---
 apiVersion: v1
 kind: Service
