@@ -23,11 +23,14 @@ type IPokemonService interface {
 
 func (ns *PokemonService) GetPokemon(id string) (domain.Pokemon, error) {
 	url := fmt.Sprintf("%s/%s", POKEMON_URL, id)
+	fmt.Printf("Making request to: %s\n", url)
 	resp, err := http.Get(url)
 
 	var parsedBody domain.Pokemon
 
 	if err != nil {
+		fmt.Print("Http Error: ")
+		fmt.Println(err)
 		return parsedBody, err
 	}
 

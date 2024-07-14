@@ -1,0 +1,8 @@
+default:
+  @just --list
+
+docker-build:
+  @docker build -t keeper-be .
+
+run-container:
+  @docker run -p 8080:8080 --rm -it --name keeper-backend -e "POKEMON_URL=$POKEMON_URL" keeper-be:latest
