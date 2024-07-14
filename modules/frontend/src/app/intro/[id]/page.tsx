@@ -1,8 +1,12 @@
 import React from 'react';
 
 async function getData(id: string): Promise<string> {
-  const url = process.env.BASE_API;
-  const response = await fetch(`${url}/${id}`).then((resp) => {
+  const baseUrl = process.env.BASE_API;
+  const url = `${baseUrl}/${id}`;
+
+  console.log('Making request to: ', url);
+
+  const response = await fetch(url).then((resp) => {
     if (resp.ok) {
       return resp.json();
     }
