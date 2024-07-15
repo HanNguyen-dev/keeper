@@ -1,0 +1,9 @@
+default:
+  @just --list
+
+docker-build-fe:
+  @docker build -t keeper-fe .
+
+run-container-fe:
+  @docker run --rm -it -p 3000:3000 --name keeper-fe -e "BASE_API=$BASE_API" keeper-fe:latest
+
