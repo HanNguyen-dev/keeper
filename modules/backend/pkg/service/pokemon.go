@@ -1,12 +1,11 @@
 package service
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 
+	"github.com/HanNguyen-dev/keeper/modules/backend/pkg/common"
 	"github.com/HanNguyen-dev/keeper/modules/backend/pkg/domain"
 )
 
@@ -35,19 +34,8 @@ func (ns *PokemonService) GetPokemon(id string) (domain.Pokemon, error) {
 	}
 
 	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
 
-	if err != nil {
-		return parsedBody, err
-	}
-
-	err = json.Unmarshal(body, &parsedBody)
-
-	if err != nil {
-		return parsedBody, err
-	}
-
-	return parsedBody, nil
+	return common.ParseBody[domain.Pokemon](resp.Body)
 }
 
 func NewPokemonService() *PokemonService {
