@@ -16,12 +16,17 @@ export default function Video() {
     });
   }
 
+  function handleDisconnect() {
+    videoRef.current && (videoRef.current.srcObject = null);
+  }
+
   return (
     <div className={style.page}>
       <h1>Video</h1>
       <div className={style.body}>
         <video autoPlay ref={videoRef}></video>
         <Button onClick={handleClick}>Connect</Button>
+        <Button onClick={handleDisconnect}>Disconnect</Button>
       </div>
     </div>
   );
