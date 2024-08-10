@@ -26,12 +26,14 @@ func (m *Member) initWriter() {
 
 		for member := range members {
 			go func() {
-				err = member.conn.WriteMessage(mt, message)
-				if err != nil {
-					log.Println("write failed:", err)
+				if member != m {
+					err = member.conn.WriteMessage(mt, message)
+
+					if err != nil {
+						log.Println("write failed:", err)
+					}
 				}
 			}()
 		}
-
 	}
 }
