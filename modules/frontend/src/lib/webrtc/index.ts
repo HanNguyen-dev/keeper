@@ -8,3 +8,4 @@ export async function getMedia(): Promise<MediaStream | void> {
       console.log('Oops, something happened', error);
     });
 }
+
