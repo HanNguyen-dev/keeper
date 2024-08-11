@@ -1,31 +1,49 @@
 'use client';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import style from './Comm.module.css';
-import { getMedia } from '@/lib/webrtc';
-import { useSignaling } from './useSignaling';
 import { Button } from '@nextui-org/react';
-import { WebRTCConnection } from '@/lib/webrtc/config';
+import { WebConference } from '@/lib/webrtc/WebConference';
 
 export default function Comm() {
-  const [connection, setConnection] = useState<WebRTCConnection>();
-  const { message } = useSignaling();
-
-  console.log(message);
+  const localVideoRef = useRef<HTMLVideoElement>(null);
+  const [connection, setConnection] = useState<WebConference>();
+  const [offer, setOffer] = useState<RTCSessionDescriptionInit>();
 
   function start() {
-    const webConnection = new WebRTCConnection();
+    const handleCall = (offer: RTCSessionDescriptionInit) => {
+      setOffer(offer);
+    };
+    const webConnection = new WebConference(handleCall);
     setConnection(webConnection);
+  }
+
+  function answer() {
+    offer && connection?.answer(offer);
+  }
+
+  function setLocalVideo() {
+    if (localVideoRef.current && 'srcObject' in localVideoRef.current) {
+      // @ts-ignore
+      localVideoRef.current.srcObject = connection?.localStream;
+    }
   }
 
   return (
     <div className={style.page}>
       <h1>Connecting</h1>
       <div className={style.body}>
-        <button onClick={getMedia}>Get media</button>
-        <Button onClick={start}>Start</Button>
-        {connection && (
-          <Button onClick={() => connection.createCall()}>Call</Button>
+        {!connection ? (
+          <Button onClick={start}>Start</Button>
+        ) : (
+          <>
+            <Button onClick={() => connection.initCall()}>Call</Button>
+            <Button onClick={setLocalVideo}>Local video</Button>
+          </>
         )}
+        {offer && <Button onClick={answer}>Answer</Button>}
+        <div>
+          <video autoPlay ref={localVideoRef}></video>
+        </div>
       </div>
     </div>
   );
