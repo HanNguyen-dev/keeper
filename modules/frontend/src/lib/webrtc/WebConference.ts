@@ -26,12 +26,6 @@ export class WebConference {
 
   initCall(): void {
     // setup WebRTC
-    this.peerConnection.ontrack = (event) => {
-      event.streams[0].getTracks().forEach((track) => {
-        this.remoteStream.addTrack(track);
-      });
-    };
-
     navigator.mediaDevices
       .getUserMedia(constraint)
       .then((stream) => {
@@ -47,6 +41,13 @@ export class WebConference {
       .catch((error) => {
         console.log('error getting media', error);
       });
+
+    this.peerConnection.ontrack = (event) => {
+      debugger;
+      event.streams[0].getTracks().forEach((track) => {
+        this.remoteStream.addTrack(track);
+      });
+    };
   }
 
   private async createOffer(): Promise<void> {
@@ -73,6 +74,27 @@ export class WebConference {
 
   async answer(offer: RTCSessionDescriptionInit): Promise<void> {
     this.connecting = true;
+    navigator.mediaDevices
+      .getUserMedia(constraint)
+      .then((stream) => {
+        this.localStream = stream;
+
+        this.localStream.getTracks().forEach((track) => {
+          if (this.localStream) {
+            this.peerConnection.addTrack(track, this.localStream);
+          }
+        });
+      })
+      .catch((error) => {
+        console.log('error getting media', error);
+      });
+
+    this.peerConnection.ontrack = (event) => {
+      debugger;
+      event.streams[0].getTracks().forEach((track) => {
+        this.remoteStream.addTrack(track);
+      });
+    };
     this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
     const answer = await this.peerConnection.createAnswer();
     await this.peerConnection.setLocalDescription(answer);
