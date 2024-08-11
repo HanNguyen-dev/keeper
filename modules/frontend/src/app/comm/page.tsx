@@ -6,6 +6,7 @@ import { WebConference } from '@/lib/webrtc/WebConference';
 
 export default function Comm() {
   const localVideoRef = useRef<HTMLVideoElement>(null);
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const [connection, setConnection] = useState<WebConference>();
   const [offer, setOffer] = useState<RTCSessionDescriptionInit>();
 
@@ -28,6 +29,12 @@ export default function Comm() {
     }
   }
 
+  function setRemoteVideo() {
+    if (remoteVideoRef.current && 'srcObject' in remoteVideoRef.current)
+      // @ts-ignore
+      remoteVideoRef.current.srcObject = connection?.remoteStream;
+  }
+
   return (
     <div className={style.page}>
       <h1>Connecting</h1>
@@ -38,11 +45,13 @@ export default function Comm() {
           <>
             <Button onClick={() => connection.initCall()}>Call</Button>
             <Button onClick={setLocalVideo}>Local video</Button>
+            <Button onClick={setRemoteVideo}>Remote video</Button>
           </>
         )}
         {offer && <Button onClick={answer}>Answer</Button>}
-        <div>
+        <div className={style.videoGrid}>
           <video autoPlay ref={localVideoRef}></video>
+          <video autoPlay ref={remoteVideoRef}></video>
         </div>
       </div>
     </div>
